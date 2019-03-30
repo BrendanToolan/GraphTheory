@@ -9,20 +9,21 @@ class nfa:
     initial = None
     accept = None
 
-    def _init_(self, initial, accept):
+    def __init__(self, initial, accept):
         self.initial = initial
         self.accept = accept
 
-def compile(pointFix):
+def compile(postFix):
     nfastack =[]
 
-    for x in pointFix:
+    for x in postFix:
         if x == '.':
             nfa2 = nfastack.pop()
             nfa1 = nfastack.pop()
             nfa1.accept.edge1 = nfa2.initial
-            newnfa =  nfa(nfa1.initial, nfa2.accept)
-            nfastack.append(newnfa)
+                    
+            nfastack.append(nfa(nfa1.initial, nfa2.accept))
+
 
         elif x == '|':
             nfa2 = nfastack.pop()
@@ -36,8 +37,8 @@ def compile(pointFix):
             nfa1.accept.edge1 = accept
             nfa2.accept.edge1 = accept
            
-            newnfa =  nfa(nfa1.initial, nfa2.accept)
-            nfastack.append(newnfa)
+            nfastack.append(nfa(initial, accept))
+
 
         elif x == '*':
             nfa1 = nfastack.pop()
@@ -47,25 +48,24 @@ def compile(pointFix):
             initial.edge2 = accept
             nfa1.accept.edge1= nfa1.initial
             nfa1.accept.edge2 = accept
-            newnfa =  nfa(nfa1.initial, nfa2.accept)
-            nfastack.append(newnfa)
+            nfastack.append(nfa(initial, accept))
+
 
         else:
             accept = state()
             initial = state()
             initial.label = x
             initial.edge1 = accept
-            newnfa =  nfa(nfa1.initial, nfa2.accept)
-            nfastack.append(newnfa)
+            nfastack.append(nfa(initial, accept))
 
     return nfastack.pop()
     
-#print(compile("ab.cd.|"))
-#print(compile("aa.*"))
+print(compile("ab.cd.|"))
+print(compile("aa.*"))
 
 def shunter(infix):
     specialChar = {'*':50, '.':40, '|':30}
-    pointFix = ""
+    postFix = ""
     stack = ""
 
     for x in infix:
@@ -73,19 +73,19 @@ def shunter(infix):
             stack = stack + x
         elif x == ')':
             while stack[-1] != '(':
-                pointFix, stack = pointFix + stack[-1], stack[:-1]
+                postFix, stack = postFix + stack[-1], stack[:-1]
             stack = stack[:-1]
         elif x in specialChar:
             while stack and specialChar.get(x,0) <= specialChar.get(stack[-1], 0):
-                pointFix, stack = pointFix + stack[-1], stack[:-1]
+                postFix, stack = postFix + stack[-1], stack[:-1]
             stack = stack + x
         
         else:
-            pointFix = pointFix + x
+            postFix = postFix + x
     
     while stack:
-        pointFix, stack = pointFix + stack[-1], stack[:-1]
+        postFix, stack = postFix + stack[-1], stack[:-1]
 
-    return pointFix
+    return postFix
 
 print(shunter("(a.b)|(c*.d)"))
