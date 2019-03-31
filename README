@@ -1,1 +1,12 @@
+Readme file for 3rd Year Graph Theory Project
+by Brendan Toolan - G00350190
 
+For this project I create a program creates Non-deterministic finite automaton(Or  Nfa)
+from a regular expression (i.e. (a|b).(c.d). and then use the nfa to see if the regualr expression
+matches any string that the program is given.
+I will do this by adding in shunter algorithm to the code. The shunter should take the expression given 
+and then go through each character in the string of the expression given. If the first character
+is '(' then it is added to the stack. Other characters added to the stack such as '*','.' and '|'.
+If the next character is a normal character such as 'a' then it is added to the ouptput( or post fix).
+If ')' is encoutered during the string, then the first thing on the stack is then added to the ouput.
+Keeps adding to the output till all characters in the string has been went through.
