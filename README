@@ -13,5 +13,10 @@ Keeps adding to the output till all characters in the string has been went throu
 
 I then put in the Thompson Constructor in the code, where I created two classes, one called state and nfa. The thompson 
 constructor parses the postfix expression fromt the shunter algorthim and turns it into a nfa
-In the for loop, it checks to see what character it is (i.e. '*','.','|'). The for checkes this  and then 
+In the for loop, it checks to see what character it is (i.e. '*','.' and '|'). The for checkes this  and then 
 pops two nfas off from the stack then pushes the new nfa to the stack then.
+
+I then went on to create two functions so I be able to use Expression Matching. One function will return a set of states and checks the labelled arrows.
+Then one function to take the infix expression and see if it matches any strings.
+I then create two arrays, one for the infixs and the other for strings to match up with.
+I then print out the results of the program onto the cmd when you type in 'python pythonProject.py'.
