@@ -1,5 +1,30 @@
 #Graph Theory Project - Brendan Toolan - G00350190
 
+def shunter(infix):
+    specialChar = {'*':50, '.':40, '|':30}
+    postFix = ""
+    stack = ""
+
+    for x in infix:
+        if x == '(':
+            stack = stack + x
+        elif x == ')':
+            while stack[-1] != '(':
+                postFix, stack = postFix + stack[-1], stack[:-1]
+            stack = stack[:-1]
+        elif x in specialChar:
+            while stack and specialChar.get(x,0) <= specialChar.get(stack[-1], 0):
+                postFix, stack = postFix + stack[-1], stack[:-1]
+            stack = stack + x
+        
+        else:
+            postFix = postFix + x
+    
+    while stack:
+        postFix, stack = postFix + stack[-1], stack[:-1]
+
+    return postFix
+#Thompson Constructor
 class state:
     label = None
     edge1 = None
@@ -31,7 +56,7 @@ def compile(postFix):
            
             initial = state()
             initial.edge1 = nfa1.initial
-            initial.ege2 = nfa2.initial
+            initial.edge2 = nfa2.initial
 
             accept = state()
             nfa1.accept.edge1 = accept
@@ -60,32 +85,44 @@ def compile(postFix):
 
     return nfastack.pop()
     
-print(compile("ab.cd.|"))
-print(compile("aa.*"))
+def follows(state):
+    states = set()
+    states.add(state)
 
-def shunter(infix):
-    specialChar = {'*':50, '.':40, '|':30}
-    postFix = ""
-    stack = ""
+    if state.label is None:
+        if state.edge1 is not None:
+            states |= follows(state.edge1)
+        if state.edge2 is not None:
+            states |= follows(state.edge2)
 
-    for x in infix:
-        if x == '(':
-            stack = stack + x
-        elif x == ')':
-            while stack[-1] != '(':
-                postFix, stack = postFix + stack[-1], stack[:-1]
-            stack = stack[:-1]
-        elif x in specialChar:
-            while stack and specialChar.get(x,0) <= specialChar.get(stack[-1], 0):
-                postFix, stack = postFix + stack[-1], stack[:-1]
-            stack = stack + x
-        
-        else:
-            postFix = postFix + x
-    
-    while stack:
-        postFix, stack = postFix + stack[-1], stack[:-1]
+    return states
 
-    return postFix
+def match(infix, string):
+    postFix = shunter(infix)
+    nfa = compile(postFix)
 
-print(shunter("(a.b)|(c*.d)"))
+    currentState = set()
+    nextState = set()
+
+    currentState |= follows(nfa.initial)
+
+    for x in string:
+        for y in currentState:
+            if y.label == x:
+                nextState |= follows(y.edge1)
+                
+        currentState = nextState
+        nextState = set()
+
+    return (nfa.accept in currentState) 
+
+infix = ["a.b.c*", "a.(b|d).c*", "(a.(b|d))*", "a.(b.b)*.c"]
+string = ["", "abc", "abbc","abcc","abad", "abbbc"]
+
+for i in infix:
+    for v in string:
+        print(match(i,v),i,v)
+
+#print(compile("ab.cd.|"))
+#print(compile("aa.*"))  
+#print(shunter("(a.b)|(c*.d)"))
