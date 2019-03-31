@@ -10,3 +10,6 @@ is '(' then it is added to the stack. Other characters added to the stack such a
 If the next character is a normal character such as 'a' then it is added to the ouptput( or post fix).
 If ')' is encoutered during the string, then the first thing on the stack is then added to the ouput.
 Keeps adding to the output till all characters in the string has been went through.
+
+I then put in the Thompson Constructor in the code, where I created two classes, one called state and nfa. The thompson 
+constructor parses the postfix expression fromt the shunter algorthim and turns it into a nfa.
