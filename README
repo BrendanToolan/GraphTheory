@@ -12,4 +12,6 @@ If ')' is encoutered during the string, then the first thing on the stack is the
 Keeps adding to the output till all characters in the string has been went through.
 
 I then put in the Thompson Constructor in the code, where I created two classes, one called state and nfa. The thompson 
-constructor parses the postfix expression fromt the shunter algorthim and turns it into a nfa.
+constructor parses the postfix expression fromt the shunter algorthim and turns it into a nfa
+In the for loop, it checks to see what character it is (i.e. '*','.','|'). The for checkes this  and then 
+pops two nfas off from the stack then pushes the new nfa to the stack then.
